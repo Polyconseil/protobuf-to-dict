@@ -1,7 +1,6 @@
 import unittest
 from tests.sample_pb2 import MessageOfTypes, extDouble, extString, NestedExtension
 from protobuf_to_dict import protobuf_to_dict, dict_to_protobuf
-import base64
 import nose.tools
 import json
 
@@ -97,8 +96,8 @@ class Test(unittest.TestCase):
         m = MessageOfTypes()
         m.dubl = 1.7e+308
         m.flot = 3.4e+038
-        m.i32 = 2 ** 31 - 1 # 2147483647 #
-        m.i64 = 2 ** 63 - 1 #0x7FFFFFFFFFFFFFFF
+        m.i32 = 2 ** 31 - 1  # 2147483647 #
+        m.i64 = 2 ** 63 - 1  # 0x7FFFFFFFFFFFFFFF
         m.ui32 = 2 ** 32 - 1
         m.ui64 = 2 ** 64 - 1
         m.si32 = -1 * m.i32
@@ -112,7 +111,7 @@ class Test(unittest.TestCase):
         m.byts = b'\n\x14\x1e'
         assert len(m.byts) == 3, len(m.byts)
         m.nested.req = "req"
-        m.enm = MessageOfTypes.C #@UndefinedVariable
+        m.enm = MessageOfTypes.C  # @UndefinedVariable
         m.enmRepeated.extend([MessageOfTypes.A, MessageOfTypes.C])
         m.range.extend(range(10))
         return m
@@ -120,12 +119,12 @@ class Test(unittest.TestCase):
     def compare(self, m, d, exclude=None):
         i = 0
         exclude = ['byts', 'nested'] + (exclude or [])
-        for i, field in enumerate(MessageOfTypes.DESCRIPTOR.fields): #@UndefinedVariable
+        for i, field in enumerate(MessageOfTypes.DESCRIPTOR.fields):  # @UndefinedVariable
             if field.name not in exclude:
                 assert field.name in d, field.name
                 assert d[field.name] == getattr(m, field.name), (field.name, d[field.name])
         assert i > 0
-        assert m.byts == base64.b64decode(d['byts'])
+        assert m.byts == d['byts'].encode('utf-8')
         assert d['nested'] == {'req': m.nested.req}
 
     def test_extensions(self):

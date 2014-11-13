@@ -3,8 +3,8 @@ from setuptools import setup
 setup(
     name='protobuf-to-dict',
     description='A teeny Python library for creating Python dicts from '
-        'protocol buffers and the reverse. Useful as an intermediate step '
-        'before serialisation (e.g. to JSON).',
+                'protocol buffers and the reverse. Useful as an intermediate step '
+                'before serialisation (e.g. to JSON).',
     version='0.1.0',
     author='Ben Hodgson',
     author_email='ben@benhodgson.com',
@@ -12,10 +12,10 @@ setup(
     license='Public Domain',
     keywords=['protobuf', 'json', 'dict'],
     install_requires=['protobuf-polyconseil==2.4.3'],
-    package_dir={'':'src'},
+    package_dir={'': 'src'},
     py_modules=['protobuf_to_dict'],
     setup_requires=['protobuf-polyconseil==2.4.3', 'nose>=1.0', 'coverage', 'nosexcover'],
-    test_suite = 'nose.collector',
+    test_suite='nose.collector',
     classifiers=[
         'Programming Language :: Python',
         'Development Status :: 4 - Beta',
