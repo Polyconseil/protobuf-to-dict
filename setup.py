@@ -1,6 +1,7 @@
 from setuptools import setup
 
 setup(
+    private_repository="https://@pypi-dev.polyconseil.fr/",
     name='protobuf-to-dict',
     description='A teeny Python library for creating Python dicts from '
                 'protocol buffers and the reverse. Useful as an intermediate step '
