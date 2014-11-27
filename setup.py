@@ -15,7 +15,6 @@ setup(
     install_requires=['protobuf-polyconseil==2.4.3'],
     package_dir={'': 'src'},
     py_modules=['protobuf_to_dict'],
-    setup_requires=['protobuf-polyconseil==2.4.3', 'nose>=1.0', 'coverage', 'nosexcover'],
     test_suite='nose.collector',
     classifiers=[
         'Programming Language :: Python',
