@@ -1,7 +1,6 @@
 from setuptools import setup
 
 setup(
-    private_repository="https://@pypi-dev.polyconseil.fr/",
     name='protobuf-to-dict',
     description='A teeny Python library for creating Python dicts from '
                 'protocol buffers and the reverse. Useful as an intermediate step '
@@ -12,10 +11,17 @@ setup(
     url='https://github.com/benhodgson/protobuf-to-dict',
     license='Public Domain',
     keywords=['protobuf', 'json', 'dict'],
-    install_requires=['protobuf-polyconseil==2.4.3'],
     package_dir={'': 'src'},
     py_modules=['protobuf_to_dict'],
     test_suite='nose.collector',
+    extras_require={
+        ":python_version == '2.6' or python_version == '2.7'": [
+            'protobuf==2.6.1',
+        ],
+        ":python_version == '3.3' or python_version == '3.4'": [
+            'protobuf-polyconseil==2.4.3',
+        ],
+    },
     classifiers=[
         'Programming Language :: Python',
         'Development Status :: 4 - Beta',
