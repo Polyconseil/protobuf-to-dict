@@ -11,17 +11,10 @@ setup(
     url='https://github.com/benhodgson/protobuf-to-dict',
     license='Public Domain',
     keywords=['protobuf', 'json', 'dict'],
+    install_requires=['protobuf>=3.0.0b1.post1'],
     package_dir={'': 'src'},
     py_modules=['protobuf_to_dict'],
     test_suite='nose.collector',
-    extras_require={
-        ":python_version == '2.6' or python_version == '2.7'": [
-            'protobuf==2.6.1',
-        ],
-        ":python_version == '3.3' or python_version == '3.4'": [
-            'protobuf-polyconseil==2.4.3',
-        ],
-    },
     classifiers=[
         'Programming Language :: Python',
         'Development Status :: 4 - Beta',
