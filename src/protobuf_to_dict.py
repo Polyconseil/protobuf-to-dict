@@ -36,11 +36,13 @@ def enum_label_name(field, value):
     return field.enum_type.values_by_number[int(value)].name
 
 
-def protobuf_to_dict(pb, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=False):
+def protobuf_fields_to_dict(fields, pb, type_callable_map, use_enum_labels, including_default_value_fields):
     result_dict = {}
     extensions = {}
-    for field, value in pb.ListFields():
-        type_callable = _get_field_value_adaptor(pb, field, type_callable_map, use_enum_labels)
+
+    for field, value in fields:
+        type_callable = _get_field_value_adaptor(
+            pb, field, type_callable_map, use_enum_labels, including_default_value_fields)
         if field.label == descriptor.FieldDescriptor.LABEL_REPEATED:
             type_callable = repeated(type_callable)
 
@@ -52,16 +54,29 @@ def protobuf_to_dict(pb, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=Fa
 
     if extensions:
         result_dict[EXTENSION_CONTAINER] = extensions
+
     return result_dict
 
 
-def _get_field_value_adaptor(pb, field, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=False):
+def protobuf_to_dict(
+        pb, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=False, including_default_value_fields=False):
+    if including_default_value_fields:
+        return protobuf_fields_to_dict(
+            [(field, getattr(pb, field.name)) for field in pb.DESCRIPTOR.fields],
+            pb, type_callable_map, use_enum_labels, including_default_value_fields)
+    return protobuf_fields_to_dict(
+        pb.ListFields(), pb, type_callable_map, use_enum_labels, including_default_value_fields)
+
+
+def _get_field_value_adaptor(
+        pb, field, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=False, including_default_value_fields=False):
     if field.type == descriptor.FieldDescriptor.TYPE_MESSAGE:
         # recursively encode protobuf sub-message
         return lambda pb: protobuf_to_dict(
             pb,
             type_callable_map=type_callable_map,
-            use_enum_labels=use_enum_labels
+            use_enum_labels=use_enum_labels,
+            including_default_value_fields=including_default_value_fields
         )
 
     if use_enum_labels and field.type == descriptor.FieldDescriptor.TYPE_ENUM:

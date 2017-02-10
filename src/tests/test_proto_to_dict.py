@@ -150,3 +150,35 @@ class Test(unittest.TestCase):
         for key, value in primitives.items():
             assert deser.Extensions[key] == m.Extensions[key]
         assert deser.Extensions[NestedExtension.extNested].req == m.Extensions[NestedExtension.extNested].req
+
+    def test_empty_fields(self):
+        m = MessageOfTypes()
+        m.nested.req = "req"
+        d = protobuf_to_dict(m)
+        assert d == {'nested': {'req': 'req'}}
+        m2 = dict_to_protobuf(MessageOfTypes, d)
+        assert m == m2
+
+        m = MessageOfTypes()
+        m.nested.req = "req"
+        dic = protobuf_to_dict(m, including_default_value_fields=True)
+        self.compare(m, dic, ['nestedRepeated'])
+        m2 = dict_to_protobuf(MessageOfTypes, dic)
+
+        assert m.dubl == 0.0
+        assert m.flot == 0.0
+        assert m.i32 == 0
+        assert m.i64 == 0
+        assert m.ui32 == 0
+        assert m.ui64 == 0
+        assert m.si32 == 0
+        assert m.si64 == 0
+        assert m.f32 == 0
+        assert m.sf32 == 0
+        assert m.sf64 == 0
+        assert m.bol is False
+        assert m.strng == ''
+        assert m.byts == b''
+        assert m.nested.req == 'req'
+        assert m.enm == 0
+        assert m.f64 == 0
