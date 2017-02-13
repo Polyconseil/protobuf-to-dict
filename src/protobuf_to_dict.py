@@ -58,8 +58,9 @@ def protobuf_fields_to_dict(fields, pb, type_callable_map, use_enum_labels, incl
     return result_dict
 
 
-def protobuf_to_dict(
-        pb, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=False, including_default_value_fields=False):
+def protobuf_to_dict(pb, type_callable_map=TYPE_CALLABLE_MAP,
+                     use_enum_labels=False, including_default_value_fields=False):
+
     if including_default_value_fields:
         return protobuf_fields_to_dict(
             [(field, getattr(pb, field.name)) for field in pb.DESCRIPTOR.fields],
@@ -68,8 +69,9 @@ def protobuf_to_dict(
         pb.ListFields(), pb, type_callable_map, use_enum_labels, including_default_value_fields)
 
 
-def _get_field_value_adaptor(
-        pb, field, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=False, including_default_value_fields=False):
+def _get_field_value_adaptor(pb, field, type_callable_map=TYPE_CALLABLE_MAP,
+                             use_enum_labels=False, including_default_value_fields=False):
+
     if field.type == descriptor.FieldDescriptor.TYPE_MESSAGE:
         # recursively encode protobuf sub-message
         return lambda pb: protobuf_to_dict(
