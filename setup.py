@@ -11,7 +11,7 @@ setup(
     url='https://github.com/benhodgson/protobuf-to-dict',
     license='Public Domain',
     keywords=['protobuf', 'json', 'dict'],
-    install_requires=['protobuf>=3.0.0b1.post1,<3.2'],  # FIXME(rcardona): don't forget to unpin
+    install_requires=['protobuf>=3.0.0b1.post1,<4.0'],
     package_dir={'': 'src'},
     py_modules=['protobuf_to_dict'],
     test_suite='nose.collector',
