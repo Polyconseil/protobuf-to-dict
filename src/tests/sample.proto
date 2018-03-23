@@ -27,6 +27,7 @@ message MessageOfTypes {
 	repeated int32 range = 18;
 	repeated NestedType nestedRepeated = 19;
 	repeated Enum enmRepeated = 20;
+	map<string, string> mapStringString = 21;
 
 	message NestedType {
 		required string req = 1;

@@ -1,6 +1,6 @@
 import unittest
 from tests.sample_pb2 import MessageOfTypes, extDouble, extString, NestedExtension
-from protobuf_to_dict import protobuf_to_dict, dict_to_protobuf
+from protobuf_to_dict import protobuf_to_dict, dict_to_protobuf, is_map
 import nose.tools
 import json
 
@@ -113,6 +113,7 @@ class Test(unittest.TestCase):
         m.nested.req = "req"
         m.enm = MessageOfTypes.C  # @UndefinedVariable
         m.enmRepeated.extend([MessageOfTypes.A, MessageOfTypes.C])
+        m.mapStringString.update({'foo': 'bar'})
         m.range.extend(range(10))
         return m
 
@@ -150,3 +151,7 @@ class Test(unittest.TestCase):
         for key, value in primitives.items():
             assert deser.Extensions[key] == m.Extensions[key]
         assert deser.Extensions[NestedExtension.extNested].req == m.Extensions[NestedExtension.extNested].req
+
+    def test_is_map(self):
+        m = MessageOfTypes()
+        assert is_map(m.DESCRIPTOR.fields_by_name['mapStringString']) is True

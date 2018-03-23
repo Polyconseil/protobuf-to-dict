@@ -28,6 +28,15 @@ TYPE_CALLABLE_MAP = {
 }
 
 
+def is_map(field):
+    """Checks if the field is a map"""
+    return bool(
+        (field.type == descriptor.FieldDescriptor.TYPE_MESSAGE) and
+        field.message_type.has_options and
+        field.message_type.GetOptions().map_entry
+    )
+
+
 def repeated(type_callable):
     return lambda value_list: [type_callable(value) for value in value_list]
 
@@ -40,9 +49,12 @@ def protobuf_to_dict(pb, type_callable_map=TYPE_CALLABLE_MAP, use_enum_labels=Fa
     result_dict = {}
     extensions = {}
     for field, value in pb.ListFields():
-        type_callable = _get_field_value_adaptor(pb, field, type_callable_map, use_enum_labels)
-        if field.label == descriptor.FieldDescriptor.LABEL_REPEATED:
-            type_callable = repeated(type_callable)
+        if is_map(field):
+            type_callable = lambda v: dict(v.items())
+        else:
+            type_callable = _get_field_value_adaptor(pb, field, type_callable_map, use_enum_labels)
+            if field.label == descriptor.FieldDescriptor.LABEL_REPEATED:
+                type_callable = repeated(type_callable)
 
         if field.is_extension:
             extensions[str(field.number)] = type_callable(value)
@@ -135,6 +147,10 @@ def _dict_to_protobuf(pb, value, type_callable_map, strict):
     fields = _get_field_mapping(pb, value, strict)
 
     for field, input_value, pb_value in fields:
+        if is_map(field):
+            pb_value.update(input_value)
+            continue
+
         if field.label == descriptor.FieldDescriptor.LABEL_REPEATED:
             for item in input_value:
                 if field.type == descriptor.FieldDescriptor.TYPE_MESSAGE:
@@ -145,6 +161,7 @@ def _dict_to_protobuf(pb, value, type_callable_map, strict):
                 else:
                     pb_value.append(item)
             continue
+
         if field.type == descriptor.FieldDescriptor.TYPE_MESSAGE:
             _dict_to_protobuf(pb_value, input_value, type_callable_map, strict)
             continue
