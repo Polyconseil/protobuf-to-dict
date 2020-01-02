@@ -11,7 +11,7 @@ setup(
     url='https://github.com/benhodgson/protobuf-to-dict',
     license='Public Domain',
     keywords=['protobuf', 'json', 'dict'],
-    install_requires=['protobuf==3.6.1+nocppext'],  # FIXME Don't forget to unpin
+    install_requires=['protobuf==3.11.2+nocppext'],  # FIXME Don't forget to unpin
     package_dir={'': 'src'},
     py_modules=['protobuf_to_dict'],
     test_suite='nose.collector',
